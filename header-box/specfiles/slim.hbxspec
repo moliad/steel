@@ -1,0 +1,72 @@
+	=== {Core Header attributes}
+	title: string!
+	file:  file! DO [ rejoin [to-file slim-name '.r] ]  ; the file is always the same as the slim-name
+	version:  tuple!
+	date: date!
+	
+	-----
+
+	author:     IS {Maxim Olivier-Adlhoch}
+	purpose:    string!
+	web:        url!  DO [rejoin [http://www.revault.org/modules/ slim-name   ".rmrk" ]]
+	-----
+	
+	source-encoding: "Windows-1252"
+	note:			 "slim Library Manager is Required to use this module."
+
+	-----
+
+;	=== {rebol.org distribution}
+;	
+;	library: text! ;   eventually we should support sub-block specs
+;	[
+;		level: 'intermediate
+;		platform: 'all
+;		type: [ tool module ]
+;		domain: [ external-library  ]
+;		tested-under: [win view 2.7.8 ]
+;		support: "same as author"
+;		license: 'Apache-v2
+;		see-also: http://www.revault.org/modules/slimtemplate.rmrk
+;	]
+
+	=== {slim - Library Manager}
+	slim-name:    lit-word!
+	slim-version: tuple! IS 1.2.1
+	slim-prefix:  none
+	slim-update:  url!  DO  [rejoin [http://www.revault.org/downloads/modules/ slim-name  ".r" ]]
+
+
+	=== {Licensing details }
+	copyright:    string!  DO  [rejoin ["Copyright © " any [attempt [date/year] now/year] " " author ]]
+	license-type: IS "Apache License v2.0"
+	license:      text!  DO  [rejoin ["Copyright © " any [attempt [date/year] now/year] " " author {
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    
+        http://www.apache.org/licenses/LICENSE-2.0
+    
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.} ]]
+
+	-----
+
+	<history>
+	history: text!  DEFAULT  {}
+	</history>
+	
+	
+	
+	<documentation>
+	documentation: text!  DEFAULT  {
+		Documentation goes here
+	}
+	</documentation>
+	
+
+	

@@ -1,0 +1,1 @@
+report "---^/Welcome to hammer^/---^/ Press F5 to run current line(s) or selected text, F9 to run complete script.^/"

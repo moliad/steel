@@ -1,0 +1,14 @@
+=== {Core Header attributes}
+title: string!
+file:  file!  
+restricted: IS {hohoho}
+author:     {Maxim Olivier-Adlhoch}
+version:  	tuple!
+ttt:		tuple! 8.8.8
+date: 		date!
+copyright:    text!  DO  [rejoin ["Copyright © " any [attempt [date/year] now/year] " " author ]]
+
+hoho:  text! {this
+	##################################################
+test}
+
