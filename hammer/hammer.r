@@ -261,10 +261,12 @@ monitor: funcl [
 ; tests:    
 ;--------------------------
 report: funcl [
+	data
 ][
 	vin "report()"
-	
+	append-con-out form data
 	vout
+	data
 ]
 
 
