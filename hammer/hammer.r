@@ -1,6 +1,47 @@
 rebol  [
-	title: "Hammer"
+	; -- Core Header attributes --
+	title: "Hammer - Rebol Meta Editor"
+	file: %hammer.r
+	version: 1.0.0
+	date: 2013-10-25
+	author: "Maxim Olivier-Adlhoch"
+	purpose: "Edit and run Rebol code."
+	web: http://www.revault.org
+	source-encoding: "Windows-1252"
+
+	; -- Licensing details  --
+	copyright: "Copyright © 2013 Maxim Olivier-Adlhoch"
+	license-type: "Apache License v2.0"
+	license: {Copyright © 2013 Maxim Olivier-Adlhoch
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+	
+		http://www.apache.org/licenses/LICENSE-2.0
+	
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.}
+
+	;-  / history
+	history: {
+		v1.0.0 - 2013-10-25
+			-first release.
+}
+	;-  \ history
+
+	;-  / documentation
+	documentation: {        
+		Press F5 to run current line(s) or selected text, F9 to run complete script.
+		
+		You can use report function or the vprinting functions to display text in the console output.
+	}
+	;-  \ documentation
 ]
+
 
 
 ;----
@@ -749,24 +790,24 @@ show-pane: funcl [
 ; record and replay events!!!
 ;----------------------------------------------------
 macro-pane: gl/layout/within compose/deep [
-    column tight  (globals/pane-title-color) (globals/pane-title-color) 3x3 [
-        column (globals/pane-bg-color) (globals/pane-bg-color)  tight [
-            row 1x1 (globals/pane-title-color)(globals/pane-title-color) corner 0 [
-                tool-icon #close no-label [gl/discard macro-pane/frame macro-pane]
-                title "Macro" left stiff 80x-1 (globals/pane-title-text-color)
-            ]
-            shadow-hseparator
-            column  13x10 [
-                row tight [
-                    button  "record" (red ) (white * .8) stiff [ event-lib/start-recording/only 'key ]
-                    button  "stop" stiff  ( black ) (white * .8)   [ event-lib/stop-recording  ]
-                ]
-                row tight [
-                    button  "play" (green * .5) (white * .8) stiff   [ event-lib/playback-recording ]
-                    button  "play fast" ( green * .5  ) (white * .8) stiff   [ event-lib/playback-recording/speed 0 ]
-                ]
-            ]
-        ]
+	column tight  (globals/pane-title-color) (globals/pane-title-color) 3x3 [
+		column (globals/pane-bg-color) (globals/pane-bg-color)  tight [
+			row 1x1 (globals/pane-title-color)(globals/pane-title-color) corner 0 [
+				tool-icon #close no-label [gl/discard macro-pane/frame macro-pane]
+				title "Macro" left stiff 80x-1 (globals/pane-title-text-color)
+			]
+			shadow-hseparator
+			column  13x10 [
+				row tight [
+					button  "record" (red ) (white * .8) stiff [ event-lib/start-recording/only 'key ]
+					button  "stop" stiff  ( black ) (white * .8)   [ event-lib/stop-recording  ]
+				]
+				row tight [
+					button  "play" (green * .5) (white * .8) stiff   [ event-lib/playback-recording ]
+					button  "play fast" ( green * .5  ) (white * .8) stiff   [ event-lib/playback-recording/speed 0 ]
+				]
+			]
+		]
    ]
 ] 'column  
 
@@ -780,14 +821,14 @@ macro-pane: gl/layout/within compose/deep [
 ; stores any user-setup which we want to persist from session to session.
 ;----------------------------------------------------
 setup-pane: gl/layout/within/tight compose/deep [
-    column tight  (globals/pane-title-color) (globals/pane-title-color) 3x3 [
-        column (globals/pane-bg-color) (globals/pane-bg-color)  tight [
-            row 1x1 (globals/pane-title-color)(globals/pane-title-color) corner 0 [
-                tool-icon #close no-label [gl/discard setup-pane/frame setup-pane]
-                title "User Preferences" left stiff 80x-1 (globals/pane-title-text-color)
-            ]
-            shadow-hseparator
-            column  13x10 [
+	column tight  (globals/pane-title-color) (globals/pane-title-color) 3x3 [
+		column (globals/pane-bg-color) (globals/pane-bg-color)  tight [
+			row 1x1 (globals/pane-title-color)(globals/pane-title-color) corner 0 [
+				tool-icon #close no-label [gl/discard setup-pane/frame setup-pane]
+				title "User Preferences" left stiff 80x-1 (globals/pane-title-text-color)
+			]
+			shadow-hseparator
+			column  13x10 [
 				auto-subtitle "Hotkeys"
 				row tight [
 					label right  "Run LINE"  stiff
@@ -812,29 +853,29 @@ setup-pane: gl/layout/within/tight compose/deep [
 					field attach-to monitored-libs  ;(content monitored-libs)
 				]
 		
-		        row tight with [spacing-on-collect: 10x0] [
-		            label right "Line Spacing" stiff
-		            column tight [
-		                lscr: scroller stiff 70x20
-		            ]
-		            dbg-leading-val: label left stiff 30x25
-		        ]
+				row tight with [spacing-on-collect: 10x0] [
+					label right "Line Spacing" stiff
+					column tight [
+						lscr: scroller stiff 70x20
+					]
+					dbg-leading-val: label left stiff 30x25
+				]
 			
-		        row tight with [spacing-on-collect: 10x0] [
-		            label right "Font size" stiff
-		            column tight [
-		                fs-scr: scroller stiff 70x20
-		            ]
-		            dbg-fs-val: label left stiff 30x25
-		        ]
+				row tight with [spacing-on-collect: 10x0] [
+					label right "Font size" stiff
+					column tight [
+						fs-scr: scroller stiff 70x20
+					]
+					dbg-fs-val: label left stiff 30x25
+				]
 			
-		        row tight with [spacing-on-collect: 10x0] [
-		            label right "Character Width" stiff
-		            column tight [
-		               cw-scr: scroller stiff 70x20
-		            ]
-		            dbg-cw-val: label left stiff 30x25
-		        ]
+				row tight with [spacing-on-collect: 10x0] [
+					label right "Character Width" stiff
+					column tight [
+					   cw-scr: scroller stiff 70x20
+					]
+					dbg-cw-val: label left stiff 30x25
+				]
 			]	
 		]
 		;elastic
@@ -855,11 +896,11 @@ setup-pane: gl/layout/within/tight compose/deep [
 main-pane: 	gl/layout/within/options compose/deep [
    ; column  [
 		row 0x0 [
-	        column (globals/pane-title-color) (globals/pane-title-color)  tight 3x3 [
-	            row 1x1 corner 0 [
-	                ;tool-icon #close no-label [gl/discard macro-gui/frame macro-gui]
-	                title "Edit box" left stiff  (globals/pane-title-text-color)
-	                				; quick launch for now
+			column (globals/pane-title-color) (globals/pane-title-color)  tight 3x3 [
+				row 1x1 corner 0 [
+					;tool-icon #close no-label [gl/discard macro-gui/frame macro-gui]
+					title "Edit box" left stiff  (globals/pane-title-text-color)
+									; quick launch for now
 					;column [
 					;vstretch stiff 2x10
 					hstretch
@@ -886,16 +927,16 @@ main-pane: 	gl/layout/within/options compose/deep [
 					;vstretch
 					;]
 
-	            ]
-	            ;shadow-hseparator
+				]
+				;shadow-hseparator
 				ed-grp: scrolled-editor  [ handle-editor-hotkeys event]
 			]
-	        column (globals/pane-title-color) (globals/pane-title-color)  tight 3x3 [
-	            row 1x1 (globals/pane-title-color)(globals/pane-title-color) corner 0 [
-	                ;tool-icon #close no-label [gl/discard macro-gui/frame macro-gui]
-	                title "Console output" left stiff  (globals/pane-title-text-color)
-	            ]
-	          	; shadow-hseparator
+			column (globals/pane-title-color) (globals/pane-title-color)  tight 3x3 [
+				row 1x1 (globals/pane-title-color)(globals/pane-title-color) corner 0 [
+					;tool-icon #close no-label [gl/discard macro-gui/frame macro-gui]
+					title "Console output" left stiff  (globals/pane-title-text-color)
+				]
+				; shadow-hseparator
 				console-editor: scrolled-editor
 			]
 		]
@@ -953,50 +994,50 @@ on-event main-editor 'CONTEXT-PRESS [
 ; allows us to view and manipulate some aspects of the editor live.
 ;----------------------------------------------------
 debug-pane: gl/layout/within compose/deep [
-    column tight  (globals/pane-title-color) (globals/pane-title-color) 3x3 [
-        column (globals/pane-bg-color) (globals/pane-bg-color)  tight [
-            row 1x1 (globals/pane-title-color)(globals/pane-title-color) corner 0 [
-                tool-icon #close no-label [gl/discard debug-pane/frame debug-pane]
-                title "Debug" left stiff 80x-1 (globals/pane-title-text-color)
-            ]
-            
-            shadow-hseparator
+	column tight  (globals/pane-title-color) (globals/pane-title-color) 3x3 [
+		column (globals/pane-bg-color) (globals/pane-bg-color)  tight [
+			row 1x1 (globals/pane-title-color)(globals/pane-title-color) corner 0 [
+				tool-icon #close no-label [gl/discard debug-pane/frame debug-pane]
+				title "Debug" left stiff 80x-1 (globals/pane-title-text-color)
+			]
+			
+			shadow-hseparator
  
-            pad 10x10
-            row tight with [spacing-on-collect: 10x0] [
-                label right "dimension" stiff
-                dbg-dimension: label left  stiff
-            ]
-            row tight with [spacing-on-collect: 10x0] [
-                label right "view-width" stiff
-                dbg-view-width: label left stiff 
-            ]
-            row tight with [spacing-on-collect: 10x0] [
-                label right "font-width" stiff
-                dbg-font-width: label left  stiff
-            ]
-            row tight with [spacing-on-collect: 10x0] [
-                label right "visible-length" stiff
-                dbg-visible-length: label left stiff
-            ]
-            row tight with [spacing-on-collect: 10x0] [
-                label right "left offset" stiff
-                dbg-left-off: label left stiff
-            ]
-            row tight with [spacing-on-collect: 10x0] [
-                label right "top line" stiff
-                dbg-top-line: label left stiff
-            ]
-            row tight with [spacing-on-collect: 10x0] [
-                label right "lines" stiff
-                dbg-lines: label left stiff
-            ]
-            row tight with [spacing-on-collect: 10x0] [
-                label right "visible lines" stiff
-                dbg-visible-lines: label left stiff
-            ]
-        ]
-    ]
+			pad 10x10
+			row tight with [spacing-on-collect: 10x0] [
+				label right "dimension" stiff
+				dbg-dimension: label left  stiff
+			]
+			row tight with [spacing-on-collect: 10x0] [
+				label right "view-width" stiff
+				dbg-view-width: label left stiff 
+			]
+			row tight with [spacing-on-collect: 10x0] [
+				label right "font-width" stiff
+				dbg-font-width: label left  stiff
+			]
+			row tight with [spacing-on-collect: 10x0] [
+				label right "visible-length" stiff
+				dbg-visible-length: label left stiff
+			]
+			row tight with [spacing-on-collect: 10x0] [
+				label right "left offset" stiff
+				dbg-left-off: label left stiff
+			]
+			row tight with [spacing-on-collect: 10x0] [
+				label right "top line" stiff
+				dbg-top-line: label left stiff
+			]
+			row tight with [spacing-on-collect: 10x0] [
+				label right "lines" stiff
+				dbg-lines: label left stiff
+			]
+			row tight with [spacing-on-collect: 10x0] [
+				label right "visible lines" stiff
+				dbg-visible-lines: label left stiff
+			]
+		]
+	]
 ] 'column
 
 
