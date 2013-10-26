@@ -35,15 +35,17 @@ get-slim-package: func [
 	
 	either exists? path [
 		print ["UPDATING " package ]
-		cmd: " git pull origin "
+		cmd: "git pull origin "
 		change-dir path
-		call/shell/console/wait cmd
+		?? cmd
+		call/show/console/wait cmd
 	][
 		print ["CLONING " package "" ]
-		cmd: rejoin [ "git clone " package ".git" ]
+		cmd: rejoin [ "git clone " git-url-base  package ".git" ]
 		;make-dir path
 		change-dir root-dir
-		call/shell/console/wait cmd
+		?? cmd
+		call/show/console/wait cmd
 	]
 ]
 
