@@ -2,8 +2,8 @@ rebol  [
 	; -- Core Header attributes --
 	title: "Hammer - Rebol Meta Editor"
 	file: %hammer.r
-	version: 1.0.0
-	date: 2013-10-25
+	version: 1.0.1
+	date: 2013-10-26
 	author: "Maxim Olivier-Adlhoch"
 	purpose: "Edit and run Rebol code."
 	web: http://www.revault.org
@@ -30,6 +30,9 @@ rebol  [
 	history: {
 		v1.0.0 - 2013-10-25
 			-first release.
+			
+		v1.0.1 - 2013-10-26
+			-Added support for the (optional) slim-path-setup.r file, as part of the steel project
 }
 	;-  \ history
 
@@ -38,6 +41,20 @@ rebol  [
 		Press F5 to run current line(s) or selected text, F9 to run complete script.
 		
 		You can use report function or the vprinting functions to display text in the console output.
+
+
+		sLIM SETUP
+		=========
+		
+		Note that you can easily setup slim by adding a file within the root of steel.
+		
+		slim-path-setup.r will be checked for existence and run whenever it does.  you just need to put
+		the path to your slim.r file there.  
+		
+		This file is part of the steel .gitignore file, so it wont try to commit it back ... 
+		i.e. its really local to your installation.
+		
+		Alternatively, it will try to find slim outside of steel or within steel, if you put it there.
 	}
 	;-  \ documentation
 ]
@@ -51,6 +68,7 @@ rebol  [
 ; 
 unless value? 'slim [
 	do any [
+		all [ exists? %../slim-path-setup.r do read %../slim-path-setup.r ]
 		all [ exists? %../../slim-libs/slim/slim.r  %../../slim-libs/slim/slim.r ] 
 		all [ exists? %../slim-libs/slim/slim.r     %../slim-libs/slim/slim.r    ] 
 	]
