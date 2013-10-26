@@ -1,3 +1,5 @@
+#!/usr/bin/rebol
+
 REBOL [
 	; -- Core Header attributes --
 	title: "Slut launch script"
@@ -92,7 +94,17 @@ REBOL [
 			 
 			-When doing rotating unit testing shifts (devs doing a few hours of tests a week), you are still 
 			 looking at the same text files, so you are much more productive.
+		
+		
 			 
+		Test specifications
+		====
+		
+		You should look at the slut.r module within the slim repository for specifics on how to define tests
+		
+		The best is probably to look within a few slim libraries (mainly the utils-libs) which have quite a
+		few tests within them.
+		
 			 
 		
 		Report
