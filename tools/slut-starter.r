@@ -36,11 +36,11 @@ REBOL [
 
 	;-  / documentation
 	documentation: {
-		SLut is the Slim Unit Testing engine, and this is its default test launching script.
+		slut is the Unit Testing engine used by Steel.  This is its default unit test launching script.
 		
 		
 		Arguments
-		====
+		----
 		
 		Just give the script a file as an argument and it will collect all slut tests and run them.  
 		
@@ -51,54 +51,54 @@ REBOL [
 		
 		
 		Inline Test definitions
-		====
+		----
 		
 		What makes slut special is that you can put your tests inline within comments of your code.
-		this has a few advantages: 
 		
-			-tests stay close to the code they are meant to verify so they are easy to relate to what code
-			 they actually end up testing.  Usually tests are far away from the code, so it may be quite hard
-			 to manually track what test verifies what code.
-			 
-			-being close means changed code also means updated tests.
-			
-			-No tests in the code, means no tests... there is no excuse for the old... "oh, I forgot to
-			 test that"... a single look at the code tells you if you've added a test for anything.
-			
-			-Easy to launch tests on the "current" file you are editing which also makes it easy to test
-			 while you are changing the code.
-			 
-			-Easy to write tests while you are writing code .. in fact its so easy, it can even be used
-			 to replace REPL testing of you code.  since you can easily define what it should be able to 
-			 do before adding the code for it... right as you are coding.
-			 
-			-When a test fails, you get its line number, so you can instantly jump to the problem code... 
-			 no need for any additonal management or tools.
-			 
-			-Being comments, they have NO execution hit, no binding cost whatsoever.
-			
-			-If you are using source versioning, the tests stay with the code.  If you are testing a branch,
-			 your tests will stay with that branch and will not create any bogus reports.  This means you can
-			 immediately edit tests for any new or changed features and they will be testable immediately.
-			 
-			 Normally, very volatile code will end up being very hard to unit test because the test scripts
-			 require to much management and tracking.  It ends up being easy to forget to update the test scripts
-			 to/from different branches with different tests and to tag everything EVERY time.
-			 
-			 There is nothing worse than a unit test report which doesn't actually test the proper code or follow
-			 the code's changes.
+		This has quite a few advantages: 
 		
-			-People who have Unit testing as their main job will remain close to the source, which also makes it
-			 more likely that your developpers will want to interact with them... because they can give 
-			 file and line numbers to interact with in the discussion... its not a vague, not my dept, issue.
-			 
-			-When doing rotating unit testing shifts (devs doing a few hours of tests a week), you are still 
-			 looking at the same text files, so you are much more productive.
+		* tests stay close to the code they are meant to verify so they are easy to relate to what code
+		 they actually end up testing.  Usually tests are far away from the code, so it may be quite hard
+		 to manually track what test verifies what code.
+		 
+		* being close means changed code also means updated tests.
 		
+		* No tests in the code, means no tests... there is no excuse for the old... "oh, I forgot to
+		 test that"... a single look at the code tells you if you've added a test for anything.
+		
+		* Easy to launch tests on the "current" file you are editing which also makes it easy to test
+		 while you are changing the code.
+		 
+		* Easy to write tests while you are writing code .. in fact its so easy, it can even be used
+		 to replace REPL testing of you code.  since you can easily define what it should be able to 
+		 do before adding the code for it... right as you are coding.
+		 
+		* When a test fails, you get its line number, so you can instantly jump to the problem code... 
+		 no need for any additonal management or tools.
+		 
+		* Being comments, they have NO execution hit, no binding cost whatsoever.
+		
+		* If you are using source versioning, the tests stay with the code.  If you are testing a branch,
+		 your tests will stay with that branch and will not create any bogus reports.  This means you can
+		 immediately edit tests for any new or changed features and they will be testable immediately.
+		 
+		 Normally, very volatile code will end up being very hard to unit test because the test scripts
+		 require to much management and tracking.  It ends up being easy to forget to update the test scripts
+		 to/from different branches with different tests and to tag everything EVERY time.
+		 
+		 There is nothing worse than a unit test report which doesn't actually test the proper code or follow
+		 the code's changes.
+		
+		* People who have Unit testing as their main job will remain close to the source, which also makes it
+		 more likely that your developpers will want to interact with them... because they can give 
+		 file and line numbers to interact with in the discussion... its not a vague, not my dept, issue.
+		 
+		* When doing rotating unit testing shifts (devs doing a few hours of tests a week), you are still 
+		 looking at the same text files, so you are much more productive.
 		
 			 
 		Test specifications
-		====
+		----
 		
 		You should look at the slut.r module within the slim repository for specifics on how to define tests
 		
@@ -108,7 +108,7 @@ REBOL [
 			 
 		
 		Report
-		====
+		----
 		
 		Once tests are done, it gives you a clean report of what tests passed, which ones failed,
 		and possibly those which give you an error message.
@@ -121,8 +121,8 @@ REBOL [
 		
 		
 		
-		sLIM SETUP
-		====
+		Slim Setup
+		----
 		
 		Note that you can easily setup slim by adding a file within the root of steel.
 		
@@ -136,14 +136,12 @@ REBOL [
 		
 		
 		
-		TO DO
-		====
+		To do:
+		----
 		
-		I need to add an argument to allow it to choose which tests from those it collects which you 
-		want to launch.
+		* I need to add an argument to allow it to choose which tests to launch from those it collects, since each test is labeled, its easy to chose which ones to launch.
 		
-		Add arguments to control what reporting is given.
-		
+		* Add arguments to control what reporting is given.
 	}
 		
 	;-  \ documentation
