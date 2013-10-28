@@ -760,7 +760,7 @@ handle-eval-hotkeys: funcl [
 	;
 	; this plug stores which libraries to monitor, it is attached to the setup.
 	;--------------------------
-	monitored-libs: liquify/fill !plug "liquid"
+	monitored-libs: liquify/fill !plug ""
 
 
 
@@ -812,7 +812,7 @@ macro-pane: gl/layout/within compose/deep [
 		column (globals/pane-bg-color) (globals/pane-bg-color)  tight [
 			row 1x1 (globals/pane-title-color)(globals/pane-title-color) corner 0 [
 				tool-icon #close no-label [gl/discard macro-pane/frame macro-pane]
-				title "Macro" left stiff 80x-1 (globals/pane-title-text-color)
+				title "Record Macro" left stiff 80x-1 (globals/pane-title-text-color)
 			]
 			shadow-hseparator
 			column  13x10 [
@@ -863,7 +863,6 @@ setup-pane: gl/layout/within/tight compose/deep [
 					field (form globals/run-page-hotkey)
 				]
 				
-				
 				auto-subtitle  "Live Edit"
 				
 				row tight [
@@ -896,8 +895,6 @@ setup-pane: gl/layout/within/tight compose/deep [
 				]
 			]	
 		]
-		;elastic
-		
 	]
 
 ] 'column 
@@ -1135,7 +1132,7 @@ lscr: none
 main-gui: gl/layout/size compose/deep [
 	tool-row tight [
 		;-    -toolbox
-		row tight 5x5 [
+		icon-toolbox: row tight 5x5 [
 			icon stiff 60x60 #page "New" [
 				vprint "New project?"
 				fill main-editor/aspects/text copy ""
