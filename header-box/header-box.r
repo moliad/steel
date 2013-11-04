@@ -2,8 +2,8 @@ rebol  [
 	; -- Core Header attributes --
 	title: "Header box - Rebol header and script management."
 	file: %header-box.r
-	version: 1.0.1
-	date: 2013-10-26
+	version: 1.0.2
+	date: 2013-11-04
 	author: "Maxim Olivier-Adlhoch"
 	purpose: "Rebol script and header compliance tool."
 	web: http://www.revault.org
@@ -33,7 +33,10 @@ rebol  [
 			
 		v1.0.1 - 2013-10-26
 			-Added support for the (optional) slim-path-setup.r file, as part of the steel project
-}
+			
+		v1.0.2 - 2013-11-04
+			-little ui tweak to prevent filepath from squashing script output options.
+	}
 	;-  \ history
 
 	;-  / documentation
@@ -1709,8 +1712,8 @@ add-text-control: funcl [
 		attr-grp: column (gray) (gray) tight [
 			title-row: row tight 2x2 [
 				SubTitle left  ( white ) with [link/reset aspects/label (attr/name) ]
-    			hstretch
-    		]
+				hstretch
+			]
 			sedtr: scrolled-editor 100x300
 		]
 	] attr-row
@@ -1870,7 +1873,7 @@ layout-attrs: funcl [
 					
 					gl/layout/within compose/deep [
 						lbl: label left ( src ) (black) 200.255.220 2 
-	            		pick-chk: tool-icon stiff #check-mark-off #check-mark-on no-label
+						pick-chk: tool-icon stiff #check-mark-off #check-mark-on no-label
 					] attr-row
 					plink:   liquify/link !pick-link reduce [ pick-chk/aspects/engaged? src-plg  rst-plg ]
 					link/reset lbl/aspects/label plink
@@ -2124,32 +2127,34 @@ attr-pane: gl/layout/within/tight compose/deep [
 					elastic
 				]
 			]
-            column tight [
-            	row tight 2x2[
-            		file-name-lbl: label "No file" left
-             		auto-label "Allow Edit" stiff left  ;  (red) (black)
-          	 		edit-chk: tool-icon stiff #check-mark-off #check-mark-on no-label
-            		;label 30x0 "   " stiff
-            		
-            		auto-label "Wrap slut.r?" stiff left padding 5x0 ;  (red) (black)  
-          	 		tool-icon stiff #check-mark-off #check-mark-on no-label  attach slutted-toggle off
-            		
-            		auto-label "Tab mode" stiff left padding 5x0 ;  (red) (black)  
-            		column tight (gray) [tool-icon stiff #spaces #tabs no-label  attach  tab-toggle on ]
-            	]
-            	row tight [
-            		column tight[
-	                    edtr: script-editor
-    	                hscrl: scroller
-	                ]
-	                column tight [
-	                    row tight [
-	                        vscrl: scroller
-	                    ]
-	                    pad 20x20
-	                ]
-                ]
-            ]
+			column tight [
+				row tight 2x2 [
+					file-name-lbl: label "No file" left
+					row tight (theme-bg-color) (theme-bg-color) [
+						auto-label "Allow Edit" stiff left  ;  (red) (black)
+						edit-chk: tool-icon stiff #check-mark-off #check-mark-on no-label
+						;label 30x0 "   " stiff
+						
+						auto-label "Wrap slut.r?" stiff left padding 5x0 ;  (red) (black)  
+						tool-icon stiff #check-mark-off #check-mark-on no-label  attach slutted-toggle off
+						
+						auto-label "Tab mode" stiff left padding 5x0 ;  (red) (black)  
+						column tight (gray) [tool-icon stiff #spaces #tabs no-label  attach  tab-toggle on ]
+					]
+				]
+				row tight [
+					column tight [
+						edtr: script-editor
+						hscrl: scroller
+					]
+					column tight [
+						row tight [
+							vscrl: scroller
+						]
+						pad 20x20
+					]
+				]
+			]
 		]
 	]
 ] 'column
