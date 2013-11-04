@@ -48,9 +48,10 @@ rebol [
 
 do %../../slim-libs/slim/slim.r
 
-fl: slim/open/expose 'fluid none  [  flow  probe-graph catalogue ]
+fl: slim/open/expose 'fluid none  [  flow  probe-pool memorize ]
 slim/open/expose 'liquid none [ content fill processor !plug link attach liquify ]
 fl/von  ; uncomment to see debug of flow.
+
 
 slim/vexpose
 von
@@ -71,7 +72,7 @@ von
 ;
 ; here we use 'PROCESSOR which is a high-level function from the liquid api which builds plug classes.
 ;-------------------------
-catalogue processor '!sum [
+memorize processor '!sum [
 	fx: 0
 	plug/liquid: foreach x data [fx: fx + any [all [number? x  x]  0 ]]
 ]
@@ -84,7 +85,7 @@ catalogue processor '!sum [
 ;
 ; here we use a more low-level approach which uses more RAM but is more Rebol "style compliant" .
 ;-------------------------
-catalogue !int: make !plug [
+memorize !int: make !plug [
 	valve: make valve [
 		type: '!int
 		
@@ -133,7 +134,7 @@ vprint ""
 vprint "---------------------------------------------"
 vprint " basic Flow operations"
 vprint "---------------------------------------------"
-graph: flow/debug [
+pool: flow/debug [
 
 	a: #plug  ; liquify (instanciate) a new plug of type !plug (filled with nothing so far)
 	a: 10     ; fill value into plug, using previously liquified plug since 'A already exists.
@@ -145,18 +146,18 @@ graph: flow/debug [
 	ref-p: :p ; create reference to external plug. (the plug is not within flow, but exists)
 	
 	;----
-	; thr following creates a new plug class on-the-fly and catalogues it for the rest of THIS flow.
+	; the following creates a new plug class on-the-fly and memorizes it for the rest of THIS flow.
 	; once the flow is done, this class is not available anymore.
 	;
 	; internally, the plug/valve/type is set to !add
 	;
 	; ideally, you should not use this too often, since it duplicates classes at each call to flow, but
-	; in many cases, you create plugs which are only used for one graph, so its handy.
+	; in many cases, you create plugs which are only used for one pool, so its handy.
 	;
 	; it can also be very useful for tools which create, save and load plugs on the fly. this means you can use
 	; the flow dialect directly to express all parts of your project.
 	;
-	; notice that by using /debug, you get the catalogue within FLOW's result graph.
+	; notice that by using /debug, you get the catalogue within FLOW's result pool.
 	#add: [
 		vin ["adding up: " mold data]
 		fx: 0
@@ -168,35 +169,37 @@ graph: flow/debug [
 	total < a      ; link a couple of plugs to total
 	total < b      ;
 	
-	value: total   ; process 'TOTAL and fill 'VALUE with its result (doesn't copy series data)
+	value: total   ; **PROCESS** 'TOTAL and fill 'VALUE with its result (doesn't copy series data)
 				   ; note there is no link or connection between 'TOTAL or 'VALUE
 				   
 	a: 2           ; note that although 'TOTAL will react to 'A change, 'VALUE will not because its not linked.
 	
 ]
-probe-graph graph
+probe-pool pool
 
 
 ;---------------------
-;-    subgraphs
+;-    subpools
 ;---------------------
 vprint ""
 vprint "---------------------------------------------"
-vprint " subgraph manipulations"
+vprint " subpool manipulations"
 vprint "---------------------------------------------"
-graph: flow/debug [
+pool: flow/debug [
 	a: 10
 	b: 1
 	
-	t: #sum [a b]  ; create a new !sum and link it to two other plugs, using a subgraph, in one line.
-	t2: #sum [ t sum: #sum [a b] #sum [a b] ] ; a more complex subgraph which allocates additional !sum nodes 
-												  ; and assigns one of them to the S word in the graph.
+	t: #sum [a b]  ; create a new !sum and link it to two other plugs, using a subpool, in one line.
+	t2: #sum [ t sum: #sum [a b] #sum [a b] sum ] ; a more complex subpool which allocates additional !sum nodes 
+												  ; and assigns one of them to the sum word in the pool.
+												  ;
+												  ; note that we use the sum plug directly within the graph!
 	
 ]
-probe-graph graph
+probe-pool pool
 	
 	
-	
+
 	
 ;---------------------
 ;-    piping
@@ -207,7 +210,7 @@ vprint " piping manipulations"
 vprint "---------------------------------------------"
 
 
-graph: flow/debug [
+pool: flow/debug [
 	p1: "1"        ; generate three containers.
 	p2: "2"
 	p3: "3"
@@ -229,26 +232,34 @@ graph: flow/debug [
 	
 	ii2 | ii | ii3  ; only 'II will be an integer because the pipe server is not setting int... only it is.
 ]
-probe-graph graph
+probe-pool pool
 
 
 
 
 ;---------------------
-;-    inline class creation
+;-    inline model creation
 ;---------------------
+
+; we turn on fluid's auto memorization feature, just to see if its working properly,
+; this feature, will automatically add all new named models to the fluid's internal catalogue
+fl/auto-memorize
+
+
 vprint ""
 vprint "---------------------------------------------"
-vprint " inline plug class creation"
+vprint " inline model creation"
 vprint "---------------------------------------------"
-graph: flow/debug [
+pool: flow/debug [
 	x: 10
 	blk: [ ]
 	fx: ( vprobe "tADAM" plug/liquid: to-pair data/1 data/2 ) [ x x ]
 	acc: (plug/liquid: data)
-	fxx: rejoin [ acc [ x x x fx ] ]
+	fxx: #rejoin [ acc [ x x x fx ] ]
+	issue: #to-issue [ fxx ]
 ]
-probe-graph graph
+probe-pool pool
+
 
 
 ;---------------------
@@ -259,10 +270,10 @@ vprint "---------------------------------------------"
 vprint " context merging"
 vprint "---------------------------------------------"
 fl/voff
-graph: flow [
+pool: flow [
 	x: 6
 ]
-other-graph: flow [
+other-pool: flow [
 	x: 6
 ]
 
@@ -283,20 +294,20 @@ ctx: context [
 	gr: blah
 ]
 
-new-graph: flow/debug [
+new-pool: flow/debug [
 	; test importing a simple object
 	/using obj
 	obj-total: #sum [ x y z ]
 	
-	; test importing a graph
-	/using graph
+	; test importing a pool
+	/using pool
 	x: 1
 	Y: :x
 	
-	/probe-graph
+	/probe-pool
 	
-	; test re-binding to new graph
-	/using other-graph
+	; test re-binding to new pool
+	/using other-pool
 	x: 2
 	s: #sum [ x y ]
 	
@@ -305,7 +316,7 @@ new-graph: flow/debug [
 	/using ctx/gr
 	gr-total: #sum [ a b c ]
 ]
-probe-graph new-graph
+probe-pool new-pool
 
 
 ask "..."
