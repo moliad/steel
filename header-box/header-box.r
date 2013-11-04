@@ -10,9 +10,9 @@ rebol  [
 	source-encoding: "Windows-1252"
 
 	; -- Licensing details  --
-	copyright: "Copyright ï¿½ 2013 Maxim Olivier-Adlhoch"
+	copyright: "Copyright © 2013 Maxim Olivier-Adlhoch"
 	license-type: "Apache License v2.0"
-	license: {Copyright ï¿½ 2013 Maxim Olivier-Adlhoch
+	license: {Copyright © 2013 Maxim Olivier-Adlhoch
 
 	Licensed under the Apache License, Version 2.0 (the "License");
 	you may not use this file except in compliance with the License.
