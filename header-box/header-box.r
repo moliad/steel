@@ -10,9 +10,9 @@ rebol  [
 	source-encoding: "Windows-1252"
 
 	; -- Licensing details  --
-	copyright: "Copyright © 2013 Maxim Olivier-Adlhoch"
+	copyright: "Copyright ï¿½ 2013 Maxim Olivier-Adlhoch"
 	license-type: "Apache License v2.0"
-	license: {Copyright © 2013 Maxim Olivier-Adlhoch
+	license: {Copyright ï¿½ 2013 Maxim Olivier-Adlhoch
 
 	Licensed under the Apache License, Version 2.0 (the "License");
 	you may not use this file except in compliance with the License.
@@ -234,7 +234,7 @@ global: globals: context [
 ;- PREFS
 ;------------------------------------
 cfg: configure compose/only [
-	default-spec: %minimal.hbxspec  "Header box spec to use when application loads, if present"
+	default-spec: %specfiles/minimal.hbxspec  "Header box spec to use when application loads, if present"
 ]
 
 cfg/from-disk/using  %header-box.cfg ; will set cfg/store-path if nothing has been saved yet.
