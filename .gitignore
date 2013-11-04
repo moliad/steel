@@ -1,8 +1,23 @@
+# ignore backup files
 *.bak
+
+# ultra edit project files
 *.prj
-*.pui
+
+# slim configurator format files
 *.cfg
+
+# ultra edit user project files
 *.pui
+
+# automatic save which shouldn't be pushed back by error.
 hammer-quick-save.r
+
+# internal slim-libs (if any) are ignored, to make them independent of steel (submodules sucks in Git)
 slim-libs/
+
+# use this to setup slim libs outside of steel folder
 slim-path-setup.r
+
+# allows people to put some private stuff within steel's working environment
+private-tools/
