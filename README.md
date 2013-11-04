@@ -23,9 +23,9 @@ from Github.
 
 The apps and scripts here are setup to use the libraries within a subfolder or from an external source.  
 
-There is a very simple way to get and update all the libs.  You just need to run the get-github-slim-libs.r
+There is a very simple way to get and update all the libs.  You just need to run the get-git-slim-libs.r
 Rebol script.  It is setup for SSH access by default (using Git protocol), but you can change it so that it
-uses an https connection.
+uses an https connection (use the -help option to get all options).
 
 
 Manual slim Setup
