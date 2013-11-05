@@ -32,7 +32,7 @@
 
 	=== {slim - Library Manager}
 	slim-name:    lit-word!
-	slim-version: tuple! IS 1.2.1
+	slim-version: tuple! IS 1.2.2
 	slim-prefix:  none
 	slim-update:  url!  DO  [rejoin [http://www.revault.org/downloads/modules/ slim-name  ".r" ]]
 
