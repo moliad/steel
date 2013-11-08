@@ -2,8 +2,8 @@ rebol [
 	; -- Core Header attributes --
 	title: "Fluid tests"
 	file: %fluid-tests.r
-	version: 1.0.0
-	date: 2013-10-18
+	version: 1.0.1
+	date: 2013-11-7
 	author: "Maxim Olivier-Adlhoch"
 	purpose: "Fluid library test and example script"
 	web: http://www.revault.org/
@@ -30,6 +30,9 @@ rebol [
 	history: {
 		v1.0.0 - 2013-10-18
 			-first release should test every function of v1.0.4 of fluid
+	
+		v1.0.1 - 2013-11-07
+			-now tests fluid v1.0.8
 	}
 	;-  \ history
 
@@ -37,6 +40,7 @@ rebol [
 	documentation: ""
 	;-  \ documentation
 ]
+
 
 
 ;-                                                                                                         .
@@ -48,7 +52,7 @@ rebol [
 
 do %../../slim-libs/slim/slim.r
 
-fl: slim/open/expose 'fluid none  [  flow  probe-pool memorize ]
+fl: slim/open/expose 'fluid 1.0.8  [  flow  probe-pool memorize ]
 slim/open/expose 'liquid none [ content fill processor !plug link attach liquify ]
 fl/von  ; uncomment to see debug of flow.
 
@@ -72,7 +76,7 @@ von
 ;
 ; here we use 'PROCESSOR which is a high-level function from the liquid api which builds plug classes.
 ;-------------------------
-memorize processor '!sum [
+memorize !sum-model: processor '!sum [
 	fx: 0
 	plug/liquid: foreach x data [fx: fx + any [all [number? x  x]  0 ]]
 ]
@@ -97,6 +101,7 @@ memorize !int: make !plug [
 		]
 	]
 ]
+
 ;---
 ; we tell this plug to use itself as its own pipe server class.
 ; 
@@ -263,13 +268,12 @@ probe-pool pool
 
 
 ;---------------------
-;-    context merging (in-line binding)
+;-    context import (in-line binding)
 ;---------------------
 vprint ""
 vprint "---------------------------------------------"
-vprint " context merging"
+vprint " context import"
 vprint "---------------------------------------------"
-fl/voff
 pool: flow [
 	x: 6
 ]
@@ -277,7 +281,7 @@ other-pool: flow [
 	x: 6
 ]
 
-fl/von
+
 obj: context [
 	x: 10
 	y: 20
@@ -304,7 +308,7 @@ new-pool: flow/debug [
 	x: 1
 	Y: :x
 	
-	/probe-pool
+	;/probe-pool
 	
 	; test re-binding to new pool
 	/using other-pool
@@ -317,6 +321,40 @@ new-pool: flow/debug [
 	gr-total: #sum [ a b c ]
 ]
 probe-pool new-pool
+
+
+
+
+;---------------------
+;-    context sharing (in-line binding)
+;---------------------
+vprint ""
+vprint "---------------------------------------------"
+vprint " context sharing"
+vprint "---------------------------------------------"
+
+
+pool-x: context [
+	x: 11
+	y: 22
+]
+
+pool-z: context [
+	z: p ; this plug will be reused within pool
+	y: 55
+]
+
+pool: flow/debug [
+	; test importing a simple object
+	y: 100
+	/sharing pool-x
+	/sharing pool-z
+	
+	y: 200
+	
+	obj-total: #sum [  x  y  z  ]
+]
+probe-pool pool
 
 
 ask "..."
