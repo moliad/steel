@@ -22,5 +22,8 @@ slim-path-setup.r
 # allows people to put some private stuff within steel's working environment
 private-tools/
 
+# allows people to put some private stuff anywhere :-)
+private/
+
 # ignore any log files (from get-git-slim-libs.r, for example)
 *.log
