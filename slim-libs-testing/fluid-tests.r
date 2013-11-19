@@ -2,8 +2,8 @@ rebol [
 	; -- Core Header attributes --
 	title: "Fluid tests"
 	file: %fluid-tests.r
-	version: 1.0.1
-	date: 2013-11-7
+	version: 1.0.3
+	date: 2013-11-19
 	author: "Maxim Olivier-Adlhoch"
 	purpose: "Fluid library test and example script"
 	web: http://www.revault.org/
@@ -33,6 +33,16 @@ rebol [
 	
 		v1.0.1 - 2013-11-07
 			-now tests fluid v1.0.8
+	
+		v1.0.2 - 2013-11-15
+			- updated to v1.1.1 of fluid
+			- added tests for /REMODEL
+			- added tests for /SHARING <prefix>
+			- added tests for > flow linking
+	
+		v1.0.3 - 2013-11-19
+			- updated to v1.1.3 of fluid
+			-added tests for unlinking.
 	}
 	;-  \ history
 
@@ -40,6 +50,8 @@ rebol [
 	documentation: ""
 	;-  \ documentation
 ]
+
+
 
 
 
@@ -54,8 +66,7 @@ do %../../slim-libs/slim/slim.r
 
 fl: slim/open/expose 'fluid 1.0.8  [  flow  probe-pool memorize ]
 slim/open/expose 'liquid none [ content fill processor !plug link attach liquify ]
-fl/von  ; uncomment to see debug of flow.
-
+;fl/von  ; uncomment to see debug of flow.
 
 slim/vexpose
 von
@@ -181,6 +192,53 @@ pool: flow/debug [
 	
 ]
 probe-pool pool
+
+
+
+;fl/von
+vprint ""
+vprint "---------------------------------------------"
+vprint " linking operations"
+vprint "---------------------------------------------"
+pool: flow/debug [
+	a: 1
+	b: 10
+	c: 100
+	d: 1000
+	
+	AA: #sum
+
+	
+	;----
+	; dependency notation... plug gets data from all others
+	;
+	AA < a         ; links 'AA to 'A
+	
+	AA < [ b c d ] ; also links 'AA to  'B, 'C & 'D  so that  'AA  adds all of them up ('A to 'D).
+	
+	;----
+	; flow notation... plugs gives data to all others
+	;
+	T: #sum
+	BB: to-issue
+	CC: to-string
+	DD: to-decimal 
+	
+	; the following is equivalent to  T < [ b c d ]
+	a > T
+	b > T
+	c > T
+	d > T
+	
+	; sends sum 'T  to  'BB 'CC & 'DD so that in a single line we will have 3 other representations of the same value.
+	T > [ BB CC DD ]  
+	
+]
+probe-pool pool
+
+
+;ask "..."
+
 
 
 ;---------------------
@@ -335,26 +393,101 @@ vprint "---------------------------------------------"
 
 
 pool-x: context [
-	x: 11
-	y: 22
+	x: 1
+	y: 10
+]
+
+pool-y: context [
+	y: 100
+	z: 1000
+	
 ]
 
 pool-z: context [
-	z: p ; this plug will be reused within pool
-	y: 55
+	y: 10000
+	z: 100'000
 ]
+
 
 pool: flow/debug [
 	; test importing a simple object
 	y: 100
 	/sharing pool-x
+	/sharing <ply> pool-y ; the <ply> tag! is used to define a prefix to add to all properties imported.
+						  ; this allows the 'Y (and 'Z) plug to be independent from the other pools which also have
+						  ; their own 'Y or 'Z.  the prefix is separated by a dot.
 	/sharing pool-z
 	
-	y: 200
+	w: 1'000'000
 	
-	obj-total: #sum [  x  y  z  ]
+	obj-total: #sum [  w x  y  z  ply.y   ply.z ]
 ]
 probe-pool pool
 
 
-ask "..."
+;---------------------
+;-    remodeling
+;---------------------
+vprint ""
+vprint "---------------------------------------------"
+vprint " remodeling"
+vprint "---------------------------------------------"
+pool-a: flow [
+	#concat: [ plug/liquid: to-string rejoin data ] ; to-string is to make sure the result really is a string!
+
+	a: 3
+	b: 7
+	
+	c: #concat [ a b ] ; at this point C is a concat plug and returns "37"
+]
+probe-pool pool-a    
+
+
+
+pool-b: flow [
+	/using pool-a
+	/remodel c #SUM  ; c now will be a sum and return 10
+]
+probe-pool pool-a    ; note that both pools are affected, because the plugs used in pool-a where reused in pool-b
+probe-pool pool-b    ; remodeling a plug actually changes its type in place... why would you want to do this?
+					 ; to preserve the linking information.  plug mutation (called remodeling in fluid) is a 
+					 ; core feature of liquid and is used to improve effectiveness of some graph managers.
+
+
+
+;---------------------
+;-    unlinking
+;---------------------
+vprint ""
+vprint "---------------------------------------------"
+vprint " unlinking"
+vprint "---------------------------------------------"
+
+
+
+pool: flow [
+	/probe
+	a: 1
+	b: 2
+	c: 3
+	
+	x: #sum [a b c]
+	/probe
+	
+	
+	; after this, x should now be none...
+	-| x |-
+	/probe
+	
+	x: #sum [a b]
+	y: #sum [b c]
+	z: #sum [a b c]
+	
+	-| [x y z] |-
+	/probe
+	
+]
+
+
+
+ask "All done, press enter to quit..."
