@@ -2217,7 +2217,7 @@ link/reset file-name-lbl/aspects/label globals/current-file
 gui: gl/layout/size compose/deep [
 	tool-row tight 5x5 [
 	;-    -toolbox
-		icon stiff 60x60 #page "Load..." [
+		icon stiff 60x60 #folder-open "Load..." [
 			if file? path: request-file/keep/only/filter "*.r;*.r2;*.r3;*.reb" [
 			
 				load-script path
@@ -2225,11 +2225,11 @@ gui: gl/layout/size compose/deep [
 			]
 		]
 		
-		icon stiff 60x60 #folder-open "Save" [
+		icon stiff 60x60 #save "Save" [
 			save-script
 		]
 		
-		icon stiff 60x60 #page-save "Save As..." [
+		icon stiff 60x60 #save "Save As..." [
 			path: request-file/keep/only/save/title/filter "Save As..." "Save"  "*.r;*.r2;*.r3;*.reb"
 			;vprobe path
 			;ask "###"
