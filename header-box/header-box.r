@@ -2077,7 +2077,7 @@ use [def-spec-fld] [
 					] 
 					
 					vout
-				]					
+				]
 				tool-icon #folder no-label stiff "Explorer" [
 					if exists? path: request-file/title/only/keep/filter "Choose file to use as default spec" "Choose"  "*.hbxspec" [
 						vprint "SETTING DEFAULT FILE PATH"
@@ -2120,7 +2120,7 @@ attr-pane: gl/layout/within/tight compose/deep [
 		auto-title left "Header Attribute Editor" (white) (black)  padding 10x10  5
 		row [
 			column [
-				auto-label left attach (globals/current-spec-file)
+				label 200x23 left attach (globals/current-spec-file)
 				scroll-frame [
 					attr-frame: column [
 					]
@@ -2128,9 +2128,10 @@ attr-pane: gl/layout/within/tight compose/deep [
 				]
 			]
 			column tight [
-				row tight 2x2 [
-					file-name-lbl: label "No file" left
+;				row tight 2x2 [
 					row tight (theme-bg-color) (theme-bg-color) [
+						file-name-lbl: label "No file" left 0x20  ; (red) (white)
+
 						auto-label "Allow Edit" stiff left  ;  (red) (black)
 						edit-chk: tool-icon stiff #check-mark-off #check-mark-on no-label
 						;label 30x0 "   " stiff
@@ -2141,10 +2142,10 @@ attr-pane: gl/layout/within/tight compose/deep [
 						auto-label "Tab mode" stiff left padding 5x0 ;  (red) (black)  
 						column tight (gray) [tool-icon stiff #spaces #tabs no-label  attach  tab-toggle on ]
 					]
-				]
+;				]
 				row tight [
 					column tight [
-						edtr: script-editor
+						edtr: script-editor 
 						hscrl: scroller
 					]
 					column tight [
