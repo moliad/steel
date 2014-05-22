@@ -2,8 +2,8 @@ rebol  [
 	; -- Core Header attributes --
 	title: "Header box - Rebol header and script management."
 	file: %header-box.r
-	version: 1.0.2
-	date: 2013-11-04
+	version: 1.0.3
+	date: 2014-05-22
 	author: "Maxim Olivier-Adlhoch"
 	purpose: "Rebol script and header compliance tool."
 	web: http://www.revault.org
@@ -36,6 +36,9 @@ rebol  [
 			
 		v1.0.2 - 2013-11-04
 			-little ui tweak to prevent filepath from squashing script output options.
+			
+		v1.0.3 - 2014-05-22
+			-added divier bar between attributes and output.
 	}
 	;-  \ history
 
@@ -919,7 +922,7 @@ load-script: funcl [
 							data <> content attr/value
 						][
 							
-							if ( 
+							if (
 								request-confirmation/message "Overide?" rejoin [ 
 									"Attribute '" attr-name "' is locked in spec... ^/Do you want to overwrite it with value from script?:^/^/'" 	
 									either (length? data) > 100 [join copy/part data 100 " ..." ][data]
@@ -2116,33 +2119,35 @@ use [def-spec-fld] [
 ;  the actual attribute editor pane.  this pane gets filled up dynamically, based on the spec file being used.
 ;--------------------------
 attr-pane: gl/layout/within/tight compose/deep [
-	column  [
-		auto-title left "Header Attribute Editor" (white) (black)  padding 10x10  5
-		row [
-			column [
-				label 200x23 left attach (globals/current-spec-file)
-				scroll-frame [
-					attr-frame: column [
+	column tight [
+		auto-title left "Header Attribute Editor" (white) (black)  padding 10x10 5
+		row tight [
+			column tight [
+				label left attach (globals/current-spec-file) stiff
+				main-attr-column: column stiff-x tight [
+					scroll-frame 400x100 [
+						attr-frame: column [
+						]
+						elastic
 					]
-					elastic
 				]
 			]
+			column 0x20 [
+				main-drag-bar: elastic ".." stiff-x  12x-1 ;(black) (white * .9) corner 2 with [fill aspects/border-color white]
+			]
 			column tight [
-;				row tight 2x2 [
-					row tight (theme-bg-color) (theme-bg-color) [
-						file-name-lbl: label "No file" left 0x20  ; (red) (white)
+				row tight (theme-bg-color) (theme-bg-color) [
+					file-name-lbl: label "No file" left 0x20  ; (red) (white)
 
-						auto-label "Allow Edit" stiff left  ;  (red) (black)
-						edit-chk: tool-icon stiff #check-mark-off #check-mark-on no-label
-						;label 30x0 "   " stiff
-						
-						auto-label "Wrap slut.r?" stiff left padding 5x0 ;  (red) (black)  
-						tool-icon stiff #check-mark-off #check-mark-on no-label  attach slutted-toggle off
-						
-						auto-label "Tab mode" stiff left padding 5x0 ;  (red) (black)  
-						column tight (gray) [tool-icon stiff #spaces #tabs no-label  attach  tab-toggle on ]
-					]
-;				]
+					auto-label "Allow Edit" stiff left  ;  (red) (black)
+					edit-chk: tool-icon stiff #check-mark-off #check-mark-on no-label
+					
+					auto-label "Wrap slut.r?" stiff left padding 5x0 ;  (red) (black)  
+					tool-icon stiff #check-mark-off #check-mark-on no-label  attach slutted-toggle off
+					
+					auto-label "Tab mode" stiff left padding 5x0 ;  (red) (black)  
+					column tight (gray) [tool-icon stiff #spaces #tabs no-label  attach  tab-toggle on ]
+				]
 				row tight [
 					column tight [
 						edtr: script-editor 
@@ -2159,6 +2164,21 @@ attr-pane: gl/layout/within/tight compose/deep [
 		]
 	]
 ] 'column
+
+main-drag-bar/actions: context [
+	select: funcl [event][
+		event/marble/user-data: content main-attr-column/aspects/dimension-adjust
+	]
+
+	drop?: drop: drop-bg: swipe: release: funcl [event][
+		;print event/action
+		;probe words-of event
+		if in event 'drag-delta [
+			;probe event/drag-delta
+			fill main-attr-column/aspects/dimension-adjust (event/marble/user-data + event/drag-delta * 1x0)
+		]
+	]
+]
 
 
 ;-------------------------
