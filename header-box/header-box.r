@@ -917,18 +917,23 @@ load-script: funcl [
 							data: mold data
 						]
 						
+						attr-value: content attr/value
+						unless string? attr-value [
+							attr-value: mold attr-value
+						]
+						
 						either all [
 							attr/locked?
-							data <> content attr/value
+							data <> attr-value
 						][
 							
 							if (
 								request-confirmation/message "Overide?" rejoin [ 
-									"Attribute '" attr-name "' is locked in spec... ^/Do you want to overwrite it with value from script?:^/^/'" 	
+									"Attribute '" attr-name "' is locked in spec... ^/Do you want to keep value from script?:^/^/'" 	
 									either (length? data) > 100 [join copy/part data 100 " ..." ][data]
 									"'"
 								]
-							 )[
+							 ) [
 								fill attr/value data
 							]
 						][
@@ -1675,8 +1680,13 @@ add-date-control: funcl [
 				time? old-date/time
 				date/time
 			]
+			str: rejoin [ date/year "-" zfill date/month 2 "-" zfill date/day 2]
 			
-			fill dattr/value date
+			if date/time [
+				append str rejoin [  "/" zfill date/time/hour 2   ":" zfill date/time/minute 2   ":" zfill date/time/second 2  ]
+			]
+			
+			fill dattr/value str
 		]
 	] attr-row
 	

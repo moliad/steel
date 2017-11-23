@@ -95,7 +95,8 @@ rebol [
 ;--------------------------
 ;- words-to-find:
 ;
-; set this to whatever you wish to detect in the file... note that it will require separators around them.
+; set this to whatever you wish to detect in the file... 
+; note that it will require separators around them ("printer" is not matched by "print").
 ;--------------------------
 words-to-find: [ "print" | "prin" |  "ask" | "probe" ] ; "vprin" | "vprobe" |
 

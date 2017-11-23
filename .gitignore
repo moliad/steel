@@ -27,3 +27,6 @@ private/
 
 # ignore any log files (from get-git-slim-libs.r, for example)
 *.log
+
+# bump.r archive files
+bump-versions/
