@@ -154,8 +154,8 @@ REBOL [
 ;- LIBS
 ;
 ;-----------------------------------------------------------------------------------------------------------
-slim-path: clean-path any [
-	all [ exists? %../slim-path-setup.r do read %../slim-path-setup.r ]
+slim-path: clean-path  any [
+	all [ exists? %../slim-path-setup.r 		do %../slim-path-setup.r ]
 	all [ exists? %../../slim-libs/slim/slim.r  %../../slim-libs/slim/slim.r ] 
 	all [ exists? %../slim-libs/slim/slim.r     %../slim-libs/slim/slim.r    ] 
 ]
@@ -217,8 +217,9 @@ unless exists? script-path [
 
 slut/extract script-path
 
-probe slut/do-tests/verbose ;/only [ liquid zdiv-error-test ]
+test-results: slut/do-tests;/verbose ;/only [ liquid zdiv-error-test ]
 
+?? test-results
 
 
 ask "press enter to quit..."

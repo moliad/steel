@@ -38,14 +38,13 @@ steel-root-path: clean-path %../../
 ;----
 unless value? 'slim [
 	do any [
-		all [ exists? steel-root-path/slim-path-setup.r         do read steel-root-path/slim-path-setup.r ]
+		all [ exists? steel-root-path/slim-path-setup.r         do  	steel-root-path/slim-path-setup.r ]
 		all [ exists? steel-root-path/../slim-libs/slim/slim.r          steel-root-path/../slim-libs/slim/slim.r ] 
 		all [ exists? steel-root-path/slim-libs/slim/slim.r             steel-root-path/slim-libs/slim/slim.r    ] 
 		all [ exists? slim-libs/slim/slim.r             				slim-libs/slim/slim.r    ] 
 	]
 ]
-
-
+;slim/von
 
 ; this is a special overide which must be define BEFORE loading sillica.
 ; it must be global
@@ -59,7 +58,7 @@ slim/open/expose 'icons none [load-icons]
 event-lib: slim/open 'event none
 
 
-bulk-lib:   slim/open/expose 'bulk         none [ make-bulk   clear-bulk  ]
+bulk-lib:   slim/open/expose 'bulk         none [ make-bulk   clear-bulk  bulk-rows ]
 liquid-lib: slim/open/expose 'liquid       none [ fill   liquify   content  dirty  !plug   link   unlink   processor  detach  attach  insubordinate]
 
 
@@ -282,7 +281,6 @@ globals: context [
 	;last-browsed-dir: none
 	
 	
-	
 	;--------------------------
 	;-         show-paths?:
 	;
@@ -291,7 +289,12 @@ globals: context [
 	show-paths?: false
 	
 	
-	
+	;--------------------------
+	;-         search-result-list:
+	;
+	; stores
+	;--------------------------
+	search-result-list: none
 	
 	
 	;config/from-disk/using  %app.cfg ; will set cfg/store-path if nothing has been saved yet.
@@ -330,12 +333,36 @@ globals: context [
 	setups-list: liquify/link !setups-to-listview setups-collection
 
 
+
 	;--------------------------
-	;-         search-result-list:
+	;-     result-list-plug:
 	;
-	; stores
 	;--------------------------
-	search-result-list: none
+	result-list-plug: none
+	
+
+	
+	
+	;--------------------------
+	;-         results-title:
+	;
+	; stores the title of the results pane (includes current number of results)
+	;--------------------------
+	results-title: liquify processor '!count-results [
+		blk: pick data 1
+		
+		plug/liquid: rejoin [
+			"Search results ("
+			mold any [
+				if block? blk [
+					bulk-rows blk
+				]
+				0
+			]
+			")"
+		]
+	]
+	
 	
 	
 
@@ -1426,30 +1453,44 @@ Search-Pane: context [
 					;-----------------------------------------------------------
 					; search text for ALL lines in search box.
 					;-----------------------------------------------------------
+					found-line: false
+					ignore-line: false
 					parse/all text [
 						any [
-							ignore-texts 
-							| search-text (
-								line-txt: any [
-									attempt [copy/part line-start find line-start "^/" ]
-									copy line-start
-								]
+							ignore-texts  (ignore-line: true)
+							| [
+									search-texts (
+									line-txt: any [
+										attempt [copy/part line-start find line-start "^/" ]
+										copy line-start
+									]
+									
+									replace/all line-start "^-" ""
+									
+									result-txt: rejoin [  to-local-file path  " (line " current-line ") : " line-txt   ]
+									result-path: rejoin [ to-local-file path "/" current-line ]
+									found-line: reduce [ result-txt  []  result-path ]
+									
 								
-								replace/all line-start "^-" ""
-								
-								result-txt: rejoin [  to-local-file path  " (line " current-line ") : " line-txt   ]
-								result-path: rejoin [ to-local-file path "/" current-line ]
-								append globals/search-result-list reduce [ result-txt  []  result-path ]
-							
-								current-line: current-line + txt-lines
-							)
-							
+									current-line: current-line + txt-lines
+								)
+							]	
 							| ign-cmts-rule
 							
-							| "^/" line-start: (
+							| [
+								"^/" line-start: (
+								if all [
+									found-line
+									not ignore-line 
+								][
+									append globals/search-result-list found-line
+								]
+								found-line: false
+								ignore-line: false
 								current-line: current-line + 1
 								wait 0
 							)
+							]
 							
 							| skip
 						]
@@ -2196,7 +2237,7 @@ gl/layout/size compose/deep/only [
 	column [
 		column tight  (globals/pane-title-color) (globals/pane-title-color) 1x1 corner 3 [
 			row 1x1 (globals/pane-title-color)(globals/pane-title-color)  [
-				title "Search results" left  150x25 (globals/pane-title-text-color) stiff
+				lbl-result-title: title "Search results" left  150x25 (globals/pane-title-text-color) stiff
 			]
 			
 			column stiff-x  tight  (gold) (black)[
@@ -2257,6 +2298,18 @@ gl/collect tool-frame temp-ignore-Pane/gui
 
 link/reset mv-srch-blocker-pane/aspects/enabled? lst-search-setups/list-marble/material/chosen?
 
+
+globals/result-list-plug: lst-search-results/list-marble/aspects/list
+globals/search-result-list: content globals/result-list-plug
+
+link/reset globals/results-title globals/result-list-plug
+
+link/reset lbl-result-title/aspects/label globals/results-title
+
+load-data
+
+
+
 ;
 ;
 ;main-drag-bar/actions: context [
@@ -2287,10 +2340,6 @@ link/reset mv-srch-blocker-pane/aspects/enabled? lst-search-setups/list-marble/m
 ;print "========3=========="
 
 ;liquid-lib/von
-
-load-data
-
-globals/search-result-list: content lst-search-results/list-marble/aspects/list
 
 
 do-events

@@ -55,7 +55,7 @@ rebol  [
 		example spec files should be pretty self-explanatory.
 
 
-		sLIM SETUP
+		SLim setup
 		=========
 		
 		Note that you can easily setup slim by adding a file within the root of steel.
@@ -78,7 +78,7 @@ rebol  [
 ; 
 unless value? 'slim [
 	do any [
-		all [ exists? %../slim-path-setup.r do read %../slim-path-setup.r ]
+		all [ exists? %../slim-path-setup.r 		do %../slim-path-setup.r ]
 		all [ exists? %../../slim-libs/slim/slim.r  %../../slim-libs/slim/slim.r ] 
 		all [ exists? %../slim-libs/slim/slim.r     %../slim-libs/slim/slim.r    ] 
 	]
@@ -128,7 +128,7 @@ hdr-plugs-lib: slim/open/expose 'hdr-plugs none [ !object !attribute !header !pi
 ink-lib: slim/open/expose 'liquid-ink none [ !split-script ]
 slim/open/expose 'utils-strings none [ zfill ]
 slim/open/expose 'utils-script none [ source-entab ]
-slim/open/expose 'utils-files none [ filename-of ]
+slim/open/expose 'utils-files none [ filename-of directory-of ]
 
 
 ;--------------
@@ -826,11 +826,23 @@ script-output: liquify/link !gate reduce [tabbed-output tab-toggle spaced-output
 ; tests:    
 ;--------------------------
 load-spec: funcl [
-	path [file!]
+	path [file! word!]
 ][
 	vin "load-spec()"
 
 	v?? path
+	
+	; make the path point to our internal spec files folder, if we only give a filename or word!
+	if any [
+		all [
+			word? path
+			path: join to-string path '.hbxspec
+		]
+		not directory-of path
+	][
+		path: clean-path join %specfiles/ path
+	]
+	
 	either exists? path [
 		unless 
 		;attempt 
@@ -2347,7 +2359,7 @@ if string? system/script/args [
 	parse args [
 		some [
 			[
-				[ '-spec | '-s ] set path file! (
+				[ '-spec | '-s ] set path [ file! | word!](
 					;print "loading spec"
 					;?? path
 					load-spec path
