@@ -1102,7 +1102,7 @@ Search-Setup-Pane: context [
 			row tight [
 				auto-label "Folders to search" (white) left with [fill aspects/font make content aspects/font [size: 19 bold?: true] ] ; (globals/pane-title-text-color) 
 				hstretch
-				tool-icon #folder no-label stiff [	
+				tool-icon #folder no-label stiff [
 					vprint "add path"
 					;add-search-path
 					all [
@@ -1117,7 +1117,7 @@ Search-Setup-Pane: context [
 			]
 			column tight [
 				lst-search-dirs: scrolled-list 100x150 no-label stiff-x  on-click  [
-					vprint "COCO"
+					;vprint "COCO"
 				]
 			]
 		]
@@ -1774,7 +1774,7 @@ temp-ignore-pane: context [
 		c: content sed/editor-marble/aspects/selections
 		clear c
 		dirty sed/editor-marble/aspects/selections
-		probe content file-list
+		;probe content file-list
 		gl/unfocus sed/editor-marble
 		vout
 	]

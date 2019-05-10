@@ -154,15 +154,16 @@ REBOL [
 ;- LIBS
 ;
 ;-----------------------------------------------------------------------------------------------------------
-slim-path: clean-path  any [
-	all [ exists? %../slim-path-setup.r 		do %../slim-path-setup.r ]
-	all [ exists? %../../slim-libs/slim/slim.r  %../../slim-libs/slim/slim.r ] 
-	all [ exists? %../slim-libs/slim/slim.r     %../slim-libs/slim/slim.r    ] 
+unless value? 'slim [
+	slim-path: clean-path  any [
+		all [ exists? %../slim-path-setup.r 		do %../slim-path-setup.r ]
+		all [ exists? %../../slim-libs/slim/slim.r  %../../slim-libs/slim/slim.r ] 
+		all [ exists? %../slim-libs/slim/slim.r     %../slim-libs/slim/slim.r    ] 
+	]
+
+	?? slim-path
+	do slim-path
 ]
-
-?? slim-path
-
-do slim-path
 
 slut: slim/open/expose 'slut none [ =extract-tests= ]
 slim/vexpose
@@ -214,7 +215,7 @@ unless exists? script-path [
 	to-error ["Unable to test given path: " script-path ]
 ]
 
-
+;slut/von
 slut/extract script-path
 
 test-results: slut/do-tests;/verbose ;/only [ liquid zdiv-error-test ]
